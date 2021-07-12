@@ -1,4 +1,4 @@
-package com.springsecurity.SpringSecurity.student;
+package com.springsecurity.SpringSecurity.Student;
 
 
 public class Student {

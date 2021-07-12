@@ -1,5 +1,6 @@
-package com.springsecurity.SpringSecurity.student;
+package com.springsecurity.SpringSecurity.Student;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -15,6 +16,7 @@ public class StudentManagementController {
             new Student(3,"Nikos")
     );
 
+    @PreAuthorize(value = "hasAuthority('student:read')")
     @GetMapping
     public List<Student> getAllStudents(){
         return STUDENTS;

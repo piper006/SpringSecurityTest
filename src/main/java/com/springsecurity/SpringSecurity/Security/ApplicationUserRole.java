@@ -1,17 +1,16 @@
-package com.springsecurity.SpringSecurity.security;
+package com.springsecurity.SpringSecurity.Security;
 
 import com.google.common.collect.Sets;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.springsecurity.SpringSecurity.security.ApplicationUserPermission.*;
+import static com.springsecurity.SpringSecurity.Security.ApplicationUserPermission.*;
 
 public enum ApplicationUserRole {
     STUDENT(Sets.newHashSet()),
-    ADMIN(Sets.newHashSet(COURSE_READ,COURSE_WRITE,STUDENT_READ,STUDENT_WRITE)),
+    ADMIN(Sets.newHashSet(COURSE_READ,COURSE_WRITE,STUDENT_WRITE)),
     ADMINTRAINEE(Sets.newHashSet(COURSE_READ,STUDENT_READ))
     ;
 
@@ -30,6 +29,16 @@ public enum ApplicationUserRole {
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toSet());
         permissions.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return permissions;
+    }
+
+    public Set<SimpleGrantedAuthority> getGrantedAuthorities(ApplicationUserRole extraRole){
+        Set<SimpleGrantedAuthority> permissions = getPermissions().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
+        permissions.addAll(extraRole.getGrantedAuthorities());
+        permissions.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        permissions.add(new SimpleGrantedAuthority("ROLE_" + extraRole.name()));
         return permissions;
     }
 }
